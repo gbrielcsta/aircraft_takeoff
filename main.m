@@ -5,7 +5,7 @@ g = 9.81; % acceleration due to gravity (m/s^2)
 W = 150; % weight of aircraft (N)
 mu = 0.1; % coefficient of friction between tires and runway
 rho = 1.225; % air density (kg/m^3)
-S = 1.80; % wing area (m^2)
+S = 1.02; % wing area (m^2)
 CD = 0.09; % drag coefficient
 CL = 0.90; % lift coefficient
 CLmax = 1.90; % maximum lift coefficient
@@ -68,7 +68,6 @@ ylabel('Velocity (m/s)')
 title('Distance vs Velocity')
 xlim([0 70])
 grid minor
-
 
 figure()
 plot(y, theta)
