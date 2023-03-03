@@ -32,3 +32,11 @@ figure()
     ylabel('Thrust (N)')
     title('Thrust vs Velocity')
     grid minor
+
+figure()
+    plot(U, Rc)
+    hold on
+    xlabel('V')
+    ylabel('Rc')
+    title('V x Rc')
+    grid minor
