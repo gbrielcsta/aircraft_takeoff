@@ -1,8 +1,8 @@
-clear all;  clc; close all;
+clear all; close all; clc;
 
 % Define parameters
 g = 9.81; % acceleration due to gravity (m/s^2)
-W = 150; % weight of aircraft (N)
+W = 120; % weight of aircraft (N)
 mu = 0.1; % coefficient of friction between tires and runway
 rho = 1.225; % air density (kg/m^3)
 S = 1.02; % wing area (m^2)
@@ -12,9 +12,9 @@ b = -0.6843;
 
 % Read plane/wing data
 wing = readtable('T1-13_0 m_s-Panel.txt');
-CD = wing.CD(21); % drag coefficient
-CL = wing.CL(21); % lift coefficient
-CLmax = wing.CL(51); % maximum lift coefficient
+CD = wing.CD(11); % drag coefficient
+CL = wing.CL(11); % lift coefficient
+CLmax = wing.CL(41); % maximum lift coefficient
 
 % Define stall velocity
 Vs = (sqrt(2 * W/(rho * CLmax * S)));
@@ -29,7 +29,7 @@ f = @(t, y) (g/W) * ((a * y^2 + b * y + T0)-(CD * 0.5 * rho * S * y^2)- mu *(W -
 V0 = 0;
 
 % Define time
-tspan = [0, 15];
+tspan = [0, 12];
 
 % Solve ODE using ode45
 [t, V] = ode45(f, tspan, V0);
@@ -38,11 +38,51 @@ tspan = [0, 15];
 D = cumtrapz(t, V);
 
 % Define required thrust
-U = Vs:.1:25;
+U = 7:.1:25;
+
 CLreq = (2 * W)./(rho * S * U.^2);
 CDreq = interp1(wing.CL, wing.CD, CLreq, 'spline');
+
 Treq = W./(CLreq./CDreq);
 T = a * U.^2 + b * U + T0;
 
 % Plot results    
-% run graphs.m
+
+figure()
+    plot(t, V)
+    xlabel('Time (s)')
+    ylabel('Velocity (m/s)')
+    title('Velocity vs Time')    
+    grid minor
+    
+figure()
+    plot(D, V)
+    xlabel('Distance (m)')
+    ylabel('Velocity (m/s)')
+    title('Distance vs Velocity')
+    xlim([0 70])
+    grid minor
+ 
+figure()
+    plot(t, D)
+    xlabel('Time (s)')
+    ylabel('Distance (m)')
+    title('Distance vs Time')
+    grid minor
+    
+figure()
+    plot(U, T)
+    hold on
+    plot(U, Treq)
+    xlabel('Velocity (m/s)')
+    ylabel('Thrust (N)')
+    title('Thrust vs Velocity')
+    grid minor
+    xlim([9 25])
+    
+    figure()
+    plot(wing.alpha, wing.CD)
+    xlabel('Time (s)')
+    ylabel('Distance (m)')
+    title('Distance vs Time')
+    grid minor
