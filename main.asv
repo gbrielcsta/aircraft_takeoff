@@ -1,17 +1,20 @@
 clear all;  clc; close all;
 
+
+W = 128; % weight of aircraft (N)
+
+
 % Define parameters
 g = 9.81; % acceleration due to gravity (m/s^2)
-W = 150; % weight of aircraft (N)
-mu = 0.1; % coefficient of friction between tires and runway
+mu = 0.06; % coefficient of friction between tires and runway
 rho = 1.225; % air density (kg/m^3)
 S = 1.02; % wing area (m^2)
-T0 = 50; % thrust at sea level (N)
-a = -0.0242;
-b = -0.6843;
+T0 = 38; % thrust at sea level (N)
+a = -0.024;
+b = -0.68;
 TOd = 58;
 h = 0.7;
-SFh = h*0.5;
+SFh = 0.3;
 
 % Read plane/wing data
 wing = readtable('T1-13_0 m_s-Panel.txt');
@@ -41,7 +44,8 @@ tspan = [0, 15];
 D = cumtrapz(t, V);
 
 % Define required thrust
-U = Vto:.1:25;
+dt = .1;
+U = Vto:dt:25;
 CLreq = (2 * W)./(rho * S * U.^2);
 CDreq = interp1(wing.CL, wing.CD, CLreq, 'spline');
 Treq = W./(CLreq./CDreq);
@@ -56,7 +60,6 @@ theta = asin(Rc./U).* (180/pi);
 thetato = interp1(U,theta,Vto,'spline');
 Dto = interp1(V,D,Vto,'spline')
 Dc = (h + SFh)./tan(thetato.*pi/180)
-%DeltaTo = TOd-Dto;
 
 TO =  Dto + Dc
 
@@ -65,26 +68,17 @@ to_time = interp1(V,t,Vto,'spline');
 final_time = interp1(D,t,TOd,'spline');
 final_velocity = interp1(D,V,TOd,'spline');
 
-  
-% Define the initial altitude of the aircraft in feet
-initial_altitude = 0;
+altitude = cumsum(Rc) * dt;
 
-% Define the time step in seconds
-% dt = 5;
+climbdist = cumsum(U) * dt;
 
-% Integrate the vertical velocity values to get the change in altitude
-% time = 0:dt:(length(Rc)-1)*dt;
-% altitude = initial_altitude + cumsum(Rc) * dt;
+figure()
+plot(U, altitude)
 
-% Calculate the final altitude of the aircraft
 
-% Plot the altitude gain over time
-% plot(time, altitude);
-% xlabel('Time (s)');
-% ylabel('Altitude (m)');
-% title('Altitude Gain Over Time');
-% grid on;
-
+figure()
+plot(climbdist, altitude)
+xlim(
 
 % Plot results    
 %run graphs.m

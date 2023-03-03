@@ -1,7 +1,4 @@
-clear all;  clc;
-
-W = 130; % weight of aircraft (N)
-
+function [TO] = calculate_takeoff(W)
 
 % Define parameters
 g = 9.81; % acceleration due to gravity (m/s^2)
@@ -43,12 +40,11 @@ tspan = [0, 15];
 D = cumtrapz(t, V);
 
 % Define required thrust
-dt = .1;
-U = Vto:dt:25;
-CLreq = (2 * W)./(rho * S * U.^2);
-CDreq = interp1(wing.CL, wing.CD, CLreq, 'spline');
-Treq = W./(CLreq./CDreq);
-T = a * U.^2 + b * U + T0;
+% U = Vto:.1:25;
+% CLreq = (2 * W)./(rho * S * U.^2);
+% CDreq = interp1(wing.CL, wing.CD, CLreq, 'spline');
+% Treq = W./(CLreq./CDreq);
+% T = a * U.^2 + b * U + T0;
 
 % Define rate of climb
 P = T.*U;
@@ -57,28 +53,14 @@ DeltaP = P - Preq;
 Rc = DeltaP./ W;
 theta = asin(Rc./U).* (180/pi);
 thetato = interp1(U,theta,Vto,'spline');
-Dto = interp1(V,D,Vto,'spline')
-Dc = (h + SFh)./tan(thetato.*pi/180)
+Dto = interp1(V,D,Vto,'spline');
+Dc = (h + SFh)./tan(thetato.*pi/180);
 
-TO =  Dto + Dc
+TO =  Dto;% + Dc;
 
 % Define parameters
 to_time = interp1(V,t,Vto,'spline');
 final_time = interp1(D,t,TOd,'spline');
 final_velocity = interp1(D,V,TOd,'spline');
 
-altitude = cumsum(Rc) * dt;
-climbdist = cumsum(U) * dt;
-
-figure()
-plot(Dto+climbdist, altitude)
-hold on
-xlabel('Distance (m)')
-ylabel('Altitude (m)')
-title('Distance vs Altitude')
-xlim([0 200])
-grid minor
-% xlim([
-
-% Plot results    
-%run graphs.m
+end
