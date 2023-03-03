@@ -1,8 +1,4 @@
-clear all;  clc; close all;
-
-
-W = 150; % weight of aircraft (N)
-
+function [TO] = calculate_takeoff(W)
 
 % Define parameters
 g = 9.81; % acceleration due to gravity (m/s^2)
@@ -57,15 +53,14 @@ DeltaP = P - Preq;
 Rc = DeltaP./ W;
 theta = asin(Rc./U).* (180/pi);
 thetato = interp1(U,theta,Vto,'spline');
-Dto = interp1(V,D,Vto,'spline')
-Dc = (h + SFh)./tan(thetato.*pi/180)
+Dto = interp1(V,D,Vto,'spline');
+Dc = (h + SFh)./tan(thetato.*pi/180);
 
-TO =  Dto + Dc
+TO =  Dto + Dc;
 
 % Define parameters
 to_time = interp1(V,t,Vto,'spline');
 final_time = interp1(D,t,TOd,'spline');
 final_velocity = interp1(D,V,TOd,'spline');
 
-% Plot results    
-%run graphs.m
+end
