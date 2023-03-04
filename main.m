@@ -1,6 +1,6 @@
 clear all;  clc;
 
-W = 130; % weight of aircraft (N)
+W = 120; % weight of aircraft (N)
 
 
 % Define parameters
@@ -43,8 +43,8 @@ tspan = [0, 15];
 D = cumtrapz(t, V);
 
 % Define required thrust
-dt = .1;
-U = Vto:dt:25;
+dt = .01;
+U = Vto:dt:20;
 CLreq = (2 * W)./(rho * S * U.^2);
 CDreq = interp1(wing.CL, wing.CD, CLreq, 'spline');
 Treq = W./(CLreq./CDreq);
@@ -78,6 +78,22 @@ ylabel('Altitude (m)')
 title('Distance vs Altitude')
 xlim([0 200])
 grid minor
+
+
+
+% Define time to climb
+time0 = to_time;
+climb_time = time0 + climbdist./Rc;
+
+figure()
+plot(climb_time, altitude)
+hold on
+xlabel('Time (s)')
+ylabel('Altitude (m)')
+title('Distance vs Altitude')
+xlim([0 200])
+grid minor
+
 % xlim([
 
 % Plot results    
