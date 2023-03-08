@@ -2,7 +2,8 @@ function [TO] = calculate_takeoff(W)
 
 % Define parameters
 g = 9.81; % acceleration due to gravity (m/s^2)
-mu = 0.06; % coefficient of friction between tires and runway
+mu = 0.1; % coefficient of friction between tires and runway
+mu2 = 0.08; % coefficient of friction between tires and runway
 rho = 1.225; % air density (kg/m^3)
 S = 1.02; % wing area (m^2)
 T0 = 38; % thrust at sea level (N)

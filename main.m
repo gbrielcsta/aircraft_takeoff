@@ -1,11 +1,12 @@
 clear all;  clc;
 
-W = 120; % weight of aircraft (N)
+W = 130; % weight of aircraft (N)
 
 
 % Define parameters
 g = 9.81; % acceleration due to gravity (m/s^2)
-mu = 0.06; % coefficient of friction between tires and runway
+mu = 0.1; % coefficient of friction between tires and runway
+mu2 = 0.065; % coefficient of friction between tires and runway
 rho = 1.225; % air density (kg/m^3)
 S = 1.02; % wing area (m^2)
 T0 = 38; % thrust at sea level (N)
@@ -28,7 +29,7 @@ Vs = (sqrt(2 * W/(rho * CLmax * S)));
 Vto = 1.2 * (sqrt(2 * W/(rho * CLmax * S)));
 
 % Define ODE function
-f = @(t, y) (g/W) * ((a * y^2 + b * y + T0)-(CD * 0.5 * rho * S * y^2)- mu *(W - (CL * 0.5 * rho * S * y^2)));
+f = @(t, y) (g/W) * ((a * y^2 + b * y + T0)-(CD * 0.5 * rho * S * y^2)- ((mu *((.1*W) - (CL * 0.5 * rho * S * y^2))) + (mu2 *((.90*W) - (CL * 0.5 * rho * S * y^2)))));
 
 % Define initial conditions
 V0 = 0;
@@ -70,14 +71,14 @@ final_velocity = interp1(D,V,TOd,'spline');
 altitude = cumsum(Rc) * dt;
 climbdist = cumsum(U) * dt;
 
-figure()
-plot(Dto+climbdist, altitude)
-hold on
-xlabel('Distance (m)')
-ylabel('Altitude (m)')
-title('Distance vs Altitude')
-xlim([0 200])
-grid minor
+% figure()
+% plot(Dto+climbdist, altitude)
+% hold on
+% xlabel('Distance (m)')
+% ylabel('Altitude (m)')
+% title('Distance vs Altitude')
+% xlim([0 200])
+% grid minor
 
 
 
@@ -85,16 +86,25 @@ grid minor
 time0 = to_time;
 climb_time = time0 + climbdist./Rc;
 
-figure()
-plot(climb_time, altitude)
-hold on
-xlabel('Time (s)')
-ylabel('Altitude (m)')
-title('Distance vs Altitude')
-xlim([0 200])
-grid minor
+% figure()
+% plot(climb_time, altitude)
+% hold on
+% xlabel('Time (s)')
+% ylabel('Altitude (m)')
+% title('Distance vs Altitude')
+% xlim([0 200])
+% grid minor
 
-% xlim([
+figure(1)
+    plot(D, V)
+    hold on
+    xlabel('Distance (m)')
+    ylabel('Velocity (m/s)')
+    title('Velocity vs Distance')
+    xlim([0 70])
+    grid on
+    grid minor
+
 
 % Plot results    
 %run graphs.m
