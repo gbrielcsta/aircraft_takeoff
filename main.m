@@ -2,11 +2,10 @@ clear all;  clc;
 
 W = 130; % weight of aircraft (N)
 
-
 % Define parameters
 g = 9.81; % acceleration due to gravity (m/s^2)
-mu = 0.1; % coefficient of friction between tires and runway
-mu2 = 0.065; % coefficient of friction between tires and runway
+mu = 0.1; % coefficient of friction
+mu2 = 0.065; % coefficient of friction
 rho = 1.225; % air density (kg/m^3)
 S = 1.02; % wing area (m^2)
 T0 = 38; % thrust at sea level (N)
@@ -44,7 +43,7 @@ tspan = [0, 15];
 D = cumtrapz(t, V);
 
 % Define required thrust
-dt = .01;
+dt = .01;  % very important (dt<= .01)
 U = Vto:dt:20;
 CLreq = (2 * W)./(rho * S * U.^2);
 CDreq = interp1(wing.CL, wing.CD, CLreq, 'spline');
@@ -67,7 +66,6 @@ TO =  Dto + Dc
 to_time = interp1(V,t,Vto,'spline');
 final_time = interp1(D,t,TOd,'spline');
 final_velocity = interp1(D,V,TOd,'spline');
-
 altitude = cumsum(Rc) * dt;
 climbdist = cumsum(U) * dt;
 
@@ -79,8 +77,6 @@ climbdist = cumsum(U) * dt;
 % title('Distance vs Altitude')
 % xlim([0 200])
 % grid minor
-
-
 
 % Define time to climb
 time0 = to_time;
